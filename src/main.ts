@@ -4,17 +4,36 @@ const tls = require('tls');
 class Main {
 
     private cliToConfig(params : any) : Config {
-        return {url: "", httpData: "", httpVerb: "get"};
+
+        return {url: params["_"][0], httpData: params["_"][1], httpVerb: "get"};
+
     }
 
     private getHttpMessage(config : Config) : string {
-        return "";
+
+        return "GET "+config.url+" HTTP/1.1\n\n";
+
     }
 
     private writeMessage(message : string) : string {
 
         // detect if HTTPs, then use https://nodejs.org/api/tls.html#tls_tls_connect_options_callback
-
+        var words=message.split(' ',5);
+        var url=words[1];
+        console.log(words);
+        var split=url.split('.',3);
+        console.log(split);
+        var split2=split[1]+'.'+split[2].split('/',1);
+        console.log(split2);
+        var host=split2;
+        var s = socket;
+        s.connect(80,  host);
+        s.write(message);
+        s.end();
+        s.on('data', function(d:any){
+            console.log(d.toString());
+        });
+        s.end();
         /**
          * Socket example:
          * var s = socket.Socket();
@@ -31,8 +50,13 @@ class Main {
 
     public Main(params : any) : void {
         console.log("it worked!");
-        console.log(params);
-        console.log(params["_"][0]);
+        //console.log(params);
+        console.log(this.cliToConfig(params));
+        var con=this.cliToConfig(params);
+        console.log(this.getHttpMessage(con));
+        var message=this.getHttpMessage(con);
+        console.log(this.writeMessage(message));
+
     }
 }
 
