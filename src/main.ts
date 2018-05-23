@@ -9,44 +9,47 @@ class Main {
 
         return {url: params["_"][0], httpData: params['d'], httpVerb:params['X']};
 
-    }
+    };
 
     private getHttpMessage(config : Config) : string {
         const url=config.url;
         const split=url.split('//',3);
         const sp2=split[1];
-        console.log('sp2'+sp2);
+        //console.log('sp2'+sp2);
         const split2=sp2.split('.',3);
-        const sp3=split2[1];
-        console.log(sp3);
+        const sp3=split2[0];
+        //console.log(sp3);
         if(config.httpVerb=='POST'){
-            return "POST "+config.url+" HTTP/1.1\n\n";
+            return "POST "+config.url+" HTTP/1.1\n"+"Host: "+sp3+".com\n"+"Accept: */*\n"+"Content-Type: application/json;charset=utf-8\n"
+            +"Cookie: PHPSESSID=ste1uhg1brkfbvuumk4sleq1i0\n"+"Content-Length: 189\n\n"+config.httpData+"\n"
+
 
         }
         else {
-            return "GET " + config.url + " HTTP/1.1\n\n";
+            return "GET " + config.url + " HTTP/1.1\n"+"Host: "+sp3;
         }
     }
 
     private writeMessage(message : string) : string {
 
         // detect if HTTPs, then use https://nodejs.org/api/tls.html#tls_tls_connect_options_callback
-        console.log(message);
+        //console.log(message);
         const split=message.split(' ',3);
-        console.log(split);
+        //console.log(split);
         const url=split[1];
-        console.log(url);
+       // console.log(url);
         const split2=url.split('/',3);
-        console.log(split2[0]);
+        //console.log(split2[0]);
         if(split2[0]=="https:"){
             console.log("has https");
             const host = split2[2];
-            console.log(host)
+            //console.log(host)
             console.log(message);
             const s = net.Socket();
             s.connect(443, host);
             const options = {
                 host:host,
+                servername: host,
                 socket:s,
             };
             //console.log(options);
@@ -54,10 +57,13 @@ class Main {
                 console.log('client connected',
                     socket.authorized ? 'authorized' : 'unauthorized');
                 console.log('tls');
+
             });
-             socket.write(message);
+            socket.write(message);
+
             socket.on('data', function (d: any) {
-               // console.log(d.toString());
+                console.log(d.toString());
+
             });
             socket.end();
         }
@@ -82,7 +88,7 @@ class Main {
     console.log(d.toString());
 });
          s.end();
-         */
+         */ //'https://jointdj.com/view/234/add_song' -H 'Content-Type: application/json;charset=utf-8' -H 'Cookie: PHPSESSID=ste1uhg1brkfbvuumk4sleq1i0;' -d '{"resultType":"video","itemTitle":"Bob Sinclar - Love Generation","itemId":"v0NSeysrDYw","thumbUrl":"https://i.ytimg.com/vi/v0NSeysrDYw/hqdefault.jpg","submittedBy":"Uncomfortable Wallaby"}'
         return ""
     }
 
