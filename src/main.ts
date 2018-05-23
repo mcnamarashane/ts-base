@@ -26,7 +26,7 @@ class Main {
 
         }
         else {
-            return "GET " + config.url + " HTTP/1.1\n"+"Host: "+sp3;
+            return "GET " + config.url + " HTTP/1.1\n\n"
         }
     }
 
